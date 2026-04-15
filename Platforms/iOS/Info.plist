@@ -1,0 +1,9 @@
+<key>UIBackgroundModes</key>
+<array>
+	<string>fetch</string>
+</array>
+<key>NSAppTransportSecurity</key>
+<dict>
+	<key>NSAllowsArbitraryLoads</key>
+	<true/>
+</dict>

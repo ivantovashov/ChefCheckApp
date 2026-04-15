@@ -1,0 +1,9 @@
+{
+  "name": "ChefCheck - Чек-лист кухни",
+  "short_name": "ChefCheck",
+  "description": "Приложение для проверки санитарных норм на кухне",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#2c3e50",
+  "background_color": "#2c3e50"
+}

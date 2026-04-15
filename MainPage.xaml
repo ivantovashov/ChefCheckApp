@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ChefCheckApp.MainPage"
+             Title="🍳 ChefCheck">
+
+	<ScrollView>
+		<StackLayout Padding="20" Spacing="20" VerticalOptions="CenterAndExpand">
+
+			<Frame CornerRadius="20" BackgroundColor="#2c3e50" Padding="20">
+				<StackLayout HorizontalOptions="CenterAndExpand">
+					<Label Text="🍳 ChefCheck"
+                           FontSize="32"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+					<Label Text="Чек-лист для поваров"
+                           FontSize="16"
+                           TextColor="#ecf0f1"
+                           HorizontalOptions="Center"/>
+				</StackLayout>
+			</Frame>
+
+			<Frame CornerRadius="15" BackgroundColor="White" Padding="0" HasShadow="True">
+				<StackLayout>
+					<Button Text="📋 Чек-лист кухни"
+                            FontSize="20"
+                            FontAttributes="Bold"
+                            BackgroundColor="#27ae60"
+                            TextColor="White"
+                            CornerRadius="15"
+                            HeightRequest="80"
+                            Clicked="OnChecklistClicked"/>
+					<Label Text="Проверка холодильников, сроков годности, чистоты"
+                           FontSize="12"
+                           TextColor="#666"
+                           HorizontalOptions="Center"
+                           Padding="10"/>
+				</StackLayout>
+			</Frame>
+
+			<Frame CornerRadius="15" BackgroundColor="White" Padding="0" HasShadow="True">
+				<StackLayout>
+					<Button Text="📊 Статистика"
+                            FontSize="20"
+                            FontAttributes="Bold"
+                            BackgroundColor="#3498db"
+                            TextColor="White"
+                            CornerRadius="15"
+                            HeightRequest="80"
+                            IsEnabled="False"/>
+					<Label Text="Скоро появится..."
+                           FontSize="12"
+                           TextColor="#666"
+                           HorizontalOptions="Center"
+                           Padding="10"/>
+				</StackLayout>
+			</Frame>
+
+			<Frame CornerRadius="15" BackgroundColor="#ecf0f1" Padding="15">
+				<StackLayout>
+					<Label Text="ℹ️ О приложении" FontAttributes="Bold" FontSize="14"/>
+					<Label Text="Версия 1.0.0" FontSize="12" TextColor="#555"/>
+					<Label Text="Разработано для контроля качества на кухне" FontSize="12" TextColor="#555"/>
+				</StackLayout>
+			</Frame>
+
+		</StackLayout>
+	</ScrollView>
+</ContentPage>

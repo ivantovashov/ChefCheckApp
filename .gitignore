@@ -1,0 +1,82 @@
+# Build artifacts
+bin/
+obj/
+Debug/
+Release/
+*.user
+*.userprefs
+*.suo
+*.pdb
+
+# Visual Studio
+.vs/
+.vscode/
+*.csproj.user
+*.DotSettings.user
+*.sln.docstates
+
+# MAUI specific
+**/Resources/Images/*
+!**/Resources/Images/*.svg
+!**/Resources/Images/*.png
+**/Platforms/*/Resources/*
+!**/Platforms/*/Resources/AppIcon.appiconset/
+!**/Platforms/*/Resources/Images.xcassets/
+
+# Android
+*.apk
+*.aab
+*.keystore
+*.jks
+
+# iOS
+*.ipa
+*.app
+
+# Windows
+*.msix
+*.msixbundle
+
+# NuGet
+packages/
+*.nupkg
+*.nuget.props
+*.nuget.targets
+
+# Temp files
+*.tmp
+*.temp
+*.log
+*.cache
+
+# User-specific files
+*.rsuser
+*.dbmdl
+
+# Mono
+*.pidb
+*.userprefs
+
+# Xamarin
+*.binlog
+*.xplog
+
+# Test results
+TestResults/
+*.trx
+
+# Backup files
+*.bak
+*.backup
+
+# macOS
+.DS_Store
+*.DS_Store
+
+# Linux
+*.swp
+*~
+
+# JetBrains Rider
+.idea/
+*.sln.iml

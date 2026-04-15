@@ -1,0 +1,472 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#2c3e50">
+    <title>ChefCheck — Чек-лист кухни</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f5f5f5;
+            padding-bottom: 80px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+            body.dark-theme {
+                background: #1a1a1a;
+                color: #e0e0e0;
+            }
+
+                body.dark-theme .section {
+                    background: #2d2d2d;
+                }
+
+                body.dark-theme .section-title {
+                    background: #3d3d3d;
+                    color: #e0e0e0;
+                    border-bottom-color: #4d4d4d;
+                }
+
+                body.dark-theme .check-item {
+                    border-bottom-color: #3d3d3d;
+                }
+
+                body.dark-theme .footer-actions {
+                    background: #2d2d2d;
+                }
+
+                body.dark-theme .note-input {
+                    background: #3d3d3d;
+                    border-color: #4d4d4d;
+                    color: #e0e0e0;
+                }
+
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+            .header h1 {
+                font-size: 20px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+        .stats {
+            background: #34495e;
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .stat-item {
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+            .stat-item:hover {
+                transform: scale(1.05);
+            }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        .progress-container {
+            margin-top: 12px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            height: 8px;
+        }
+
+        .progress-fill {
+            background: #27ae60;
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            padding: 4px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+            .filter-btn.active {
+                background: #2c3e50;
+                color: white;
+            }
+
+        body.dark-theme .filter-btn {
+            background: #3d3d3d;
+            color: #e0e0e0;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            background: #ecf0f1;
+            padding: 14px 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-badge {
+            background: #e74c3c;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
+            gap: 12px;
+        }
+
+        .check-text {
+            flex: 1;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .status-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 24px;
+            border: none;
+            background: #ecf0f1;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2c3e50;
+        }
+
+            .status-btn.plus {
+                background: #27ae60;
+                color: white;
+            }
+
+            .status-btn.minus {
+                background: #e74c3c;
+                color: white;
+            }
+
+        .note-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 12px;
+            margin-top: 6px;
+            display: none;
+        }
+
+            .note-input.show {
+                display: block;
+            }
+
+        .footer-actions {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 12px 16px;
+            display: flex;
+            gap: 12px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 80px;
+        }
+
+            .btn:active {
+                transform: scale(0.98);
+            }
+
+        .btn-primary {
+            background: #2c3e50;
+            color: white;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #e67e22;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-info {
+            background: #3498db;
+            color: white;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 16px;
+            right: 16px;
+            background: #2c3e50;
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+            z-index: 200;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+            .toast.show {
+                opacity: 1;
+            }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 300;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+            .modal.show {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        body.dark-theme .modal-content {
+            background: #2d2d2d;
+            color: #e0e0e0;
+        }
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .history-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+            .history-item:hover {
+                background: #f5f5f5;
+            }
+
+        .hotkey-hint {
+            position: fixed;
+            bottom: 80px;
+            right: 16px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 10px;
+            z-index: 150;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 12px;
+            }
+
+            .status-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 22px;
+            }
+
+            .hotkey-hint {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🍽 ChefCheck — Чек-лист кухни</h1>
+        <div class="stats">
+            <div class="stat-item" data-filter="all">
+                <div class="stat-value" id="totalCount">0</div>
+                <div class="stat-label">Всего</div>
+            </div>
+            <div class="stat-item" data-filter="plus">
+                <div class="stat-value" id="plusCount">0</div>
+                <div class="stat-label">✅ Выполнено</div>
+            </div>
+            <div class="stat-item" data-filter="minus">
+                <div class="stat-value" id="minusCount">0</div>
+                <div class="stat-label">❌ Нарушения</div>
+            </div>
+            <div class="stat-item" data-filter="all">
+                <div class="stat-value" id="percentCount">0%</div>
+                <div class="stat-label">Готовность</div>
+            </div>
+        </div>
+        <div class="progress-container">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="filter-bar">
+            <button class="filter-btn active" data-filter="all">📋 Все</button>
+            <button class="filter-btn" data-filter="plus">✅ Выполнено</button>
+            <button class="filter-btn" data-filter="minus">❌ Нарушения</button>
+            <button class="filter-btn" data-filter="null">⚪ Не проверено</button>
+        </div>
+        <div id="checklistContainer">
+            <div style="text-align: center; padding: 40px;">Загрузка...</div>
+        </div>
+    </div>
+
+    <div class="footer-actions">
+        <button class="btn btn-warning" id="settingsBtn">⚙️ Настройки</button>
+        <button class="btn btn-info" id="historyBtn">📜 История</button>
+        <button class="btn btn-success" id="saveReportBtn">💾 Сохранить отчёт</button>
+        <button class="btn btn-primary" id="pdfBtn">📄 PDF</button>
+        <button class="btn btn-danger" id="resetBtn">🔄 Сброс</button>
+    </div>
+
+    <div class="hotkey-hint">
+        ⌨️ Ctrl+S - Сохранить | Ctrl+R - Сброс | Ctrl+P - PDF
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 16px;">⚙️ Настройки</h3>
+            <div class="setting-row">
+                <span>👤 Ваше имя</span>
+                <input type="text" id="userName" placeholder="Повар/Проверяющий">
+            </div>
+            <div class="setting-row">
+                <span>🌙 Тёмная тема</span>
+                <input type="checkbox" id="darkThemeToggle">
+            </div>
+            <button class="btn btn-primary" style="margin-top: 20px;" id="saveSettingsBtn">Сохранить</button>
+            <button class="btn btn-danger" style="margin-top: 10px;" id="closeSettingsBtn">Закрыть</button>
+        </div>
+    </div>
+
+    <div id="historyModal" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 16px;">📜 История проверок</h3>
+            <div id="historyList" class="history-list"></div>
+            <button class="btn btn-danger" style="margin-top: 10px;" id="closeHistoryBtn">Закрыть</button>
+        </div>
+    </div>
+</body>
+</html>
